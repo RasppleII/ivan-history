@@ -6,7 +6,7 @@ wget -O /home/user1/.bash_history ivanx.com/rasppleii/bash_history-vm.txt
 history -c
 history -r
 
-[[  1 ]]
+# [[  1 ]] # Make sudo work without passwd for users in group sudo
 sudo tee /etc/sudoers.d/group-sudo-nopasswd >/dev/null <<EOF
 # Allow members of group sudo to execute any command without a password
 %sudo   ALL=(ALL:ALL) NOPASSWD: ALL

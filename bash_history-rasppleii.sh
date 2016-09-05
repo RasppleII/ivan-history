@@ -38,24 +38,30 @@ fi
 
 [[  3 ]]
 sudo rm /etc/default/keyboard
-echo "keyboard-configuration keyboard-configuration/modelcode select pc104" | sudo debconf-set-selections
-echo "keyboard-configuration keyboard-configuration/xkb-keymap select us" | sudo debconf-set-selections
-echo "keyboard-configuration keyboard-configuration/layout select English (US)" | sudo debconf-set-selections
-echo "keyboard-configuration keyboard-configuration/variant select English (US)" | sudo debconf-set-selections
-echo "keyboard-configuration keyboard-configuration/model select Generic 104-key PC" | sudo debconf-set-selections
-echo "keyboard-configuration keyboard-configuration/layoutcode select us" | sudo debconf-set-selections
+sudo debconf-set-selections <<EOF
+keyboard-configuration keyboard-configuration/modelcode select pc104
+keyboard-configuration keyboard-configuration/xkb-keymap select us
+keyboard-configuration keyboard-configuration/layout select English (US)
+keyboard-configuration keyboard-configuration/variant select English (US)
+keyboard-configuration keyboard-configuration/model select Generic 104-key PC
+keyboard-configuration keyboard-configuration/layoutcode select us
+EOF
 sudo dpkg-reconfigure -f noninteractive keyboard-configuration
 sudo invoke-rc.d keyboard-setup start
 sudo setupcon
 
 sudo rm /etc/timezone
-echo "tzdata tzdata/Zones/US select Eastern" | sudo debconf-set-selections
-echo "tzdata tzdata/Areas select US" | sudo debconf-set-selections
+sudo debconf-set-selections <<EOF
+tzdata tzdata/Zones/US select Eastern
+tzdata tzdata/Areas select US
+EOF
 sudo dpkg-reconfigure -f noninteractive tzdata
 
 sudo rm /etc/default/locale /etc/locale.gen 2> /dev/null
-echo "locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8, en_US ISO-8859-1" | sudo debconf-set-selections
-echo "locales locales/default_environment_locale select en_US.UTF-8" | sudo debconf-set-selections
+sudo debconf-set-selections <<EOF
+locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8, en_US ISO-8859-1
+locales locales/default_environment_locale select en_US.UTF-8
+EOF
 sudo dpkg-reconfigure -f noninteractive locales
 source /etc/default/locale
 

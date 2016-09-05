@@ -13,7 +13,18 @@ sudo shutdown -r now
 [[  2 ]]
 {
 	[[ ! $(grep NOOBS /etc/rc.local) ]] && \
-		sudo sed -i "s@^exit 0@grep -q NOOBS /boot/config.txt \&\& { tac /boot/config.txt | sed '1,9d' | tac > /tmp/config.txt; cp /tmp/config.txt /boot/config.txt; mkdir -p /tmp/p1; mount /dev/mmcblk0p1 /tmp/p1; sed -i 's/silentinstall//' /tmp/p1/recovery.cmdline; umount /tmp/p1; shutdown -r now; }\n\nexit 0@" /etc/rc.local
+		sudo sed -i "s@^exit 0@grep -q NOOBS /boot/config.txt \&\& \
+{
+	tac /boot/config.txt | sed '1,9d' | tac > /tmp/config.txt
+	cp /tmp/config.txt /boot/config.txt
+	mkdir -p /tmp/p1
+	mount /dev/mmcblk0p1 /tmp/p1
+	sed -i 's/silentinstall//' /tmp/p1/recovery.cmdline
+	umount /tmp/p1
+	shutdown -r now
+}
+
+exit 0@" /etc/rc.local
 	grep -q NOOBS /boot/config.txt && \
 	{
 		tac /boot/config.txt | sed '1,9d' | tac > /tmp/config.txt

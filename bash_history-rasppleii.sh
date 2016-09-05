@@ -1,3 +1,6 @@
+#!/bin/bash
+# vim: set ft=sh tabstop=4 shiftwidth=4 noexpandtab :
+
 [[  0 ]]; wget -O /home/pi/.bash_history ivanx.com/rasppleii/bash_history-rasppleii.txt; history -c; history -r
 [[  1 ]]; sudo systemctl set-default multi-user.target &> /dev/null; sudo shutdown -r now
 [[  2 ]]; { [[ ! $(grep NOOBS /etc/rc.local) ]] && sudo sed -i "s@^exit 0@grep -q NOOBS /boot/config.txt \&\& { tac /boot/config.txt | sed '1,9d' | tac > /tmp/config.txt; cp /tmp/config.txt /boot/config.txt; mkdir -p /tmp/p1; mount /dev/mmcblk0p1 /tmp/p1; sed -i 's/silentinstall//' /tmp/p1/recovery.cmdline; umount /tmp/p1; shutdown -r now; }\n\nexit 0@" /etc/rc.local; grep -q NOOBS /boot/config.txt && { tac /boot/config.txt | sed '1,9d' | tac > /tmp/config.txt; sudo cp /tmp/config.txt /boot/config.txt; }; }
@@ -8,4 +11,3 @@
 [[  7 ]]; sudo wget -O /etc/motd ivanx.com/rasppleii/motd-rasppleii.txt
 [[  8 ]]; mkdir -p /tmp/usbdisk; sudo mount /dev/sda1 /tmp/usbdisk; sudo rm /tmp/usbdisk/BOOT.TAR &> /dev/null; pwd="$PWD"; cd /boot; sudo tar -cvpf /tmp/usbdisk/BOOT.TAR .; cd "$pwd"; sudo umount /dev/sda1; rmdir /tmp/usbdisk
 [[  9 ]]; mkdir -p /tmp/usbdisk; sudo mount /dev/sda1 /tmp/usbdisk; sudo rm /tmp/usbdisk/ROOT.TAR &> /dev/null; sudo tar -cvpf /tmp/usbdisk/ROOT.TAR /* --exclude=proc/* --exclude=sys/* --exclude=dev/pts/* --exclude=/tmp/* --exclude=/var/swap --exclude=/boot/* --exclude=/home/pi/.ssh/*; sudo umount /dev/sda1; rmdir /tmp/usbdisk
-

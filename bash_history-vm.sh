@@ -7,7 +7,11 @@ history -c
 history -r
 
 [[  1 ]]
-sudo sed -i 's/^\(%sudo.*\) ALL$/\1 NOPASSWD: ALL/' /etc/sudoers
+sudo tee /etc/sudoers.d/group-sudo-nopasswd >/dev/null <<EOF
+# Allow members of group sudo to execute any command without a password
+%sudo   ALL=(ALL:ALL) NOPASSWD: ALL
+EOF
+sudo chmod 440 /etc/sudoers.d/group-sudo-nopasswd
 
 [[  2 ]]
 sudo sed -i '0,/-eq 0/s/-eq 0/-ge 0/' /etc/profile

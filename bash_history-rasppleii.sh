@@ -14,8 +14,11 @@ sudo shutdown -r now
 
 [[  2 ]]
 if ! grep -q NOOBS /etc/rc.local; then
-	sudo sed -i "s@^exit 0@grep -q NOOBS /boot/config.txt \&\& \
-{
+	sudo sed -i "s@^exit 0@# Remove NOOBS's video config.txt video tampering.  The Pi's bootloader is
+# unable to detect some nonstandard HDMI displays, so unless the user tells
+# it to use composite, NOOBS forces HDMI.  We use unattended install, and
+# it's better to err on the side of composite for Apple // users anyway.
+if grep -q NOOBS /boot/config.txt; then
 	tac /boot/config.txt | sed '1,9d' | tac > /tmp/config.txt
 	cp /tmp/config.txt /boot/config.txt
 	mkdir -p /tmp/p1
@@ -23,7 +26,7 @@ if ! grep -q NOOBS /etc/rc.local; then
 	sed -i 's/silentinstall//' /tmp/p1/recovery.cmdline
 	umount /tmp/p1
 	shutdown -r now
-}
+fi
 
 exit 0@" /etc/rc.local
 fi

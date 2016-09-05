@@ -1,3 +1,6 @@
+#!/bin/bash
+# vim: set ft=sh tabstop=4 shiftwidth=4 noexpandtab :
+
 [[  0 ]]; wget -O /home/user1/.bash_history ivanx.com/rasppleii/bash_history-vm.txt; history -c; history -r
 [[  1 ]]; sudo sed -i 's/^\(%sudo.*\) ALL$/\1 NOPASSWD: ALL/' /etc/sudoers
 [[  2 ]]; sudo sed -i '0,/-eq 0/s/-eq 0/-ge 0/' /etc/profile; source /etc/profile

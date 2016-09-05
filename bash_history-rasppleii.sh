@@ -13,7 +13,7 @@ sudo shutdown -r now
 
 
 [[  2 ]]
-[[ ! $(grep NOOBS /etc/rc.local) ]] && \
+if ! grep -q NOOBS /etc/rc.local; then
 	sudo sed -i "s@^exit 0@grep -q NOOBS /boot/config.txt \&\& \
 {
 	tac /boot/config.txt | sed '1,9d' | tac > /tmp/config.txt
@@ -26,11 +26,11 @@ sudo shutdown -r now
 }
 
 exit 0@" /etc/rc.local
-grep -q NOOBS /boot/config.txt && \
-{
+fi
+if grep -q NOOBS /boot/config.txt; then
 	tac /boot/config.txt | sed '1,9d' | tac > /tmp/config.txt
 	sudo cp /tmp/config.txt /boot/config.txt
-}
+fi
 
 
 [[  3 ]]
@@ -56,12 +56,11 @@ echo "locales locales/default_environment_locale select en_US.UTF-8" | sudo debc
 sudo dpkg-reconfigure -f noninteractive locales
 source /etc/default/locale
 
-[[ -e /etc/profile.d/raspi-config.sh ]] && \
-{
+if [[ -e /etc/profile.d/raspi-config.sh ]]; then
 	sudo rm -f /etc/profile.d/raspi-config.sh
 	sudo sed -i /etc/inittab -e "s/^#\(.*\)#\s*RPICFG_TO_ENABLE\s*/\1/" -e "/#\s*RPICFG_TO_DISABLE/d"
 	sudo telinit q
-}
+fi
 
 
 [[  4 ]]

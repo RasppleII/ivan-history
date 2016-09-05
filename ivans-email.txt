@@ -1,0 +1,73 @@
+Date: Sun, 25 Oct 2015 13:20:02 -0400
+From: Ivan Drucker <>
+To: "T. Joseph Carter" <>
+Subject: Building the distro
+Message-Id: <>
+
+Hi Joseph,
+
+Building the distro was not something I ever prepared for a theoretical 
+external developer, so it's not very general cased. With that said, I tried to 
+make my own life easy, so it's moderately optimized. I'm doing this from 
+memory rather than having the device in front of me, but I think the process 
+is:
+
+(Install and boot a fresh Raspbian.)
+cd /tmp
+wget ivanx.com/rasppleii/history-setup.txt
+source history_setup.txt
+
+This replaces ~/.bash_history with a downloaded one.
+
+So then, you use up-arrow all the way back to the top command, then proceed 
+through each command in order, which are visibly numbered.
+
+You will notice that step 2 is biased towards US keyboard and Eastern time. 
+I'm geocentric, what can I say.
+
+You don't need to execute step 0. If you're not using NOOBS, you can skip steps 1, 7, and 8, and instead just shut down and write the blocks to a raw image using dd or Pi Copier.
+
+If you're making a NOOBS distro, then before you execute steps 7 and 8, you 
+need to insert a FAT-formatted 4GB+ USB stick into the Pi. This will receive 
+the NOOBS tarballs. They need to be compressed using xzip, which takes all day 
+and all night on the Pi, so my workflow is to sneakernet the uncompressed 
+tarball to my Mac to do the compression.
+
+After step 8, put the USB stick in your Mac. This is very hardcoded to my 
+setup, but should be easily adapted. Here's what's specific for my 
+environment:
+
+- The USB stick volume name is "4GB"
+
+- In my home directory is a folder called Raspbian
+
+- In the Raspbian folder is a folder called "RasppleII-xxx" where xxx is the 
+intended version number, and it contains all the NOOBS files for Raspple II. 
+I never go into this folder in the Finder so I don't get .DS_Store files and 
+the linke. I can't remember whether this folder can contain a virgin NOOBS, 
+or whether it needs to be an existing Raspple II distro. I always use the 
+last distro.
+
+- Once I'm set, I paste the following into Terminal. It will leave 
+RasppleII-xxx.zip in my ~/Raspbian folder, and also begin uploading it to my 
+server (authenticated by public/private keypair, so that I can just so this 
+and come back four hours later.)
+
+echo -n "Raspple II version: "; read; rasppleVersion=$REPLY; [[ ! -d ~/Raspbian/RasppleII-$rasppleVersion ]] && echo "~/Raspbian/RasppleII-$rasppleVersion not found." || { cd ~/Raspbian/RasppleII-$rasppleVersion; sed -i '' "17s@:.*@: $(( $( echo $(( $(ls -sk /Volumes/4GB/ROOT.TAR | cut -f 1 -d ' ') * 1024 )) | rev | cut -c 7- | rev ) + 1 ))@" os/Raspbian/partitions.json; echo "Copying..."; cp /Volumes/4GB/BOOT.TAR /tmp; cp /Volumes/4GB/ROOT.TAR /tmp; echo "Starting compression..."; xz -c -9 -e /tmp/BOOT.TAR > os/Raspbian/boot.tar.xz; xz -c -9 -e /tmp/ROOT.TAR > os/Raspbian/root.tar.xz; zip -0r ../RasppleII-$rasppleVersion.zip *; echo "Uploading..."; scp ../RasppleII-$rasppleVersion.zip liveb3@ivanx.com:www/ivanx/appleii/rasppleii/files/; }
+
+
+The process is exactly the same for the Virtualbox VM; it gets a different 
+bash_history that omits all the NOOBS-specific stuff. When it's done, I shut 
+it down and export an OVA file for distribution. Before I export the OVA, I 
+make sure the virtual Ethernet interface has MAC address 08:00:03:F2:FF:59, so 
+that there's a known MAC someone can setup a DHCP reservation in their router 
+for.
+
+
+I think that's it. Hope this helps.
+
+
+Best,
+Ivan.
+
+# vim: set filetype=mail textwidth=78 formatoptions+=w :

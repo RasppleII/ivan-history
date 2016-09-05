@@ -12,21 +12,48 @@ sudo shutdown -r now
 
 [[  2 ]]
 {
-	[[ ! $(grep NOOBS /etc/rc.local) ]] && sudo sed -i "s@^exit 0@grep -q NOOBS /boot/config.txt \&\& { tac /boot/config.txt | sed '1,9d' | tac > /tmp/config.txt; cp /tmp/config.txt /boot/config.txt; mkdir -p /tmp/p1; mount /dev/mmcblk0p1 /tmp/p1; sed -i 's/silentinstall//' /tmp/p1/recovery.cmdline; umount /tmp/p1; shutdown -r now; }\n\nexit 0@" /etc/rc.local; grep -q NOOBS /boot/config.txt && { tac /boot/config.txt | sed '1,9d' | tac > /tmp/config.txt; sudo cp /tmp/config.txt /boot/config.txt; }
+	[[ ! $(grep NOOBS /etc/rc.local) ]] && \
+		sudo sed -i "s@^exit 0@grep -q NOOBS /boot/config.txt \&\& { tac /boot/config.txt | sed '1,9d' | tac > /tmp/config.txt; cp /tmp/config.txt /boot/config.txt; mkdir -p /tmp/p1; mount /dev/mmcblk0p1 /tmp/p1; sed -i 's/silentinstall//' /tmp/p1/recovery.cmdline; umount /tmp/p1; shutdown -r now; }\n\nexit 0@" /etc/rc.local
+	grep -q NOOBS /boot/config.txt && \
+	{
+		tac /boot/config.txt | sed '1,9d' | tac > /tmp/config.txt
+		sudo cp /tmp/config.txt /boot/config.txt
+	}
 }
 
 [[  3 ]]
 {
-	sudo rm /etc/default/keyboard; echo "keyboard-configuration keyboard-configuration/modelcode select pc104" | sudo debconf-set-selections; echo "keyboard-configuration keyboard-configuration/xkb-keymap select us" | sudo debconf-set-selections; echo "keyboard-configuration keyboard-configuration/layout select English (US)" | sudo debconf-set-selections; echo "keyboard-configuration keyboard-configuration/variant select English (US)" | sudo debconf-set-selections; echo "keyboard-configuration keyboard-configuration/model select Generic 104-key PC" | sudo debconf-set-selections; echo "keyboard-configuration keyboard-configuration/layoutcode select us" | sudo debconf-set-selections; sudo dpkg-reconfigure -f noninteractive keyboard-configuration; sudo invoke-rc.d keyboard-setup start; sudo setupcon
+	sudo rm /etc/default/keyboard
+	echo "keyboard-configuration keyboard-configuration/modelcode select pc104" | sudo debconf-set-selections
+	echo "keyboard-configuration keyboard-configuration/xkb-keymap select us" | sudo debconf-set-selections
+	echo "keyboard-configuration keyboard-configuration/layout select English (US)" | sudo debconf-set-selections
+	echo "keyboard-configuration keyboard-configuration/variant select English (US)" | sudo debconf-set-selections
+	echo "keyboard-configuration keyboard-configuration/model select Generic 104-key PC" | sudo debconf-set-selections
+	echo "keyboard-configuration keyboard-configuration/layoutcode select us" | sudo debconf-set-selections
+	sudo dpkg-reconfigure -f noninteractive keyboard-configuration
+	sudo invoke-rc.d keyboard-setup start
+	sudo setupcon
 }
 {
-	sudo rm /etc/timezone; echo "tzdata tzdata/Zones/US select Eastern" | sudo debconf-set-selections; echo "tzdata tzdata/Areas select US" | sudo debconf-set-selections; sudo dpkg-reconfigure -f noninteractive tzdata;
+	sudo rm /etc/timezone
+	echo "tzdata tzdata/Zones/US select Eastern" | sudo debconf-set-selections
+	echo "tzdata tzdata/Areas select US" | sudo debconf-set-selections
+	sudo dpkg-reconfigure -f noninteractive tzdata
 }
 {
-	sudo rm /etc/default/locale /etc/locale.gen 2> /dev/null; echo "locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8, en_US ISO-8859-1" | sudo debconf-set-selections; echo "locales locales/default_environment_locale select en_US.UTF-8" | sudo debconf-set-selections; sudo dpkg-reconfigure -f noninteractive locales; source /etc/default/locale
+	sudo rm /etc/default/locale /etc/locale.gen 2> /dev/null
+	echo "locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8, en_US ISO-8859-1" | sudo debconf-set-selections
+	echo "locales locales/default_environment_locale select en_US.UTF-8" | sudo debconf-set-selections
+	sudo dpkg-reconfigure -f noninteractive locales
+	source /etc/default/locale
 }
 {
-	[[ -e /etc/profile.d/raspi-config.sh ]] && { sudo rm -f /etc/profile.d/raspi-config.sh; sudo sed -i /etc/inittab -e "s/^#\(.*\)#\s*RPICFG_TO_ENABLE\s*/\1/" -e "/#\s*RPICFG_TO_DISABLE/d"; sudo telinit q; }
+	[[ -e /etc/profile.d/raspi-config.sh ]] && \
+	{
+		sudo rm -f /etc/profile.d/raspi-config.sh
+		sudo sed -i /etc/inittab -e "s/^#\(.*\)#\s*RPICFG_TO_ENABLE\s*/\1/" -e "/#\s*RPICFG_TO_DISABLE/d"
+		sudo telinit q
+	}
 }
 
 [[  4 ]]

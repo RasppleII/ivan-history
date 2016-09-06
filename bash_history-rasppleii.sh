@@ -2,8 +2,7 @@
 # vim: set ft=sh tabstop=4 shiftwidth=4 noexpandtab :
 
 ## Set system not to stat X11 by default
-sudo systemctl set-default multi-user.target &> /dev/null
-sudo shutdown -r now
+sudo systemctl set-default multi-user.target
 
 
 ## Fix NOOBS's twiddling with video settings

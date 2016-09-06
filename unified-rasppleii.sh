@@ -14,11 +14,8 @@ EOF
 	sudo chmod 440 /etc/sudoers.d/group-sudo-nopasswd
 fi
 
-if [ $isRPi ]; then
-	## Set system not to stat X11 by default
-	sudo systemctl set-default multi-user.target &> /dev/null
-	sudo shutdown -r now
-fi
+#X# Set system not to stat X11 by default
+sudo systemctl set-default multi-user.target
 
 if [ $isRPi ]; then
 	## Fix NOOBS's twiddling with video settings

@@ -9,6 +9,10 @@ EOF
 sudo chmod 440 /etc/sudoers.d/group-sudo-nopasswd
 
 
+## Set system not to stat X11 by default
+sudo systemctl set-default multi-user.target
+
+
 ## Use default root path instead of user path for all users
 # sed to English: Only in the range of line 0 to the first line containing
 # pattern /-eq 0/, replace that pattern with "-ge 0".

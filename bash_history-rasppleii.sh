@@ -89,24 +89,3 @@ sudo sed -i "s/Raspple II release.*$/Raspple II release $REPLY/" /etc/issue
 
 ## Install MOTD
 sudo wget -O /etc/motd ivanx.com/rasppleii/motd-rasppleii.txt
-
-
-## build BOOT.TAR on sda1 from /boot
-mkdir -p /tmp/usbdisk
-sudo mount /dev/sda1 /tmp/usbdisk
-sudo rm /tmp/usbdisk/BOOT.TAR &> /dev/null
-pwd="$PWD"
-cd /boot
-sudo tar -cvpf /tmp/usbdisk/BOOT.TAR .
-cd "$pwd"
-sudo umount /dev/sda1
-rmdir /tmp/usbdisk
-
-
-## build ROOT.TAR on sda1 from /
-mkdir -p /tmp/usbdisk
-sudo mount /dev/sda1 /tmp/usbdisk
-sudo rm /tmp/usbdisk/ROOT.TAR &> /dev/null
-sudo tar -cvpf /tmp/usbdisk/ROOT.TAR /* --exclude=proc/* --exclude=sys/* --exclude=dev/pts/* --exclude=/tmp/* --exclude=/var/swap --exclude=/boot/* --exclude=/home/pi/.ssh/*
-sudo umount /dev/sda1
-rmdir /tmp/usbdisk

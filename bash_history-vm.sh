@@ -37,4 +37,6 @@ sudo sed -i "s/A2SERVER VM release.*$/A2SERVER VM release $REPLY/" /etc/issue
 
 
 ## Install MOTD
-sudo wget -O /etc/motd ivanx.com/rasppleii/motd-vm.txt
+sudo install -m644 motd.txt /etc/motd
+# Delete the line about raspi-config
+sudo sed -i '/raspi-config/d' /etc/motd

@@ -115,8 +115,8 @@ elif [ $isDebian ]; then
 fi
 
 ## Install MOTD
-if [ $isRPi ]; then
-	sudo wget -O /etc/motd ivanx.com/rasppleii/motd-rasppleii.txt
-elif [ $isDebian ]; then
-	sudo wget -O /etc/motd ivanx.com/rasppleii/motd-vm.txt
+sudo install -m644 motd.txt /etc/motd
+if [ ! $isRPi ]; then
+	# Delete the line about raspi-config
+	sudo sed -i '/raspi-config/d' /etc/motd
 fi

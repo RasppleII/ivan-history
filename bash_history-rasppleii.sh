@@ -88,4 +88,4 @@ sudo sed -i "s/Raspple II release.*$/Raspple II release $REPLY/" /etc/issue
 
 
 ## Install MOTD
-sudo wget -O /etc/motd ivanx.com/rasppleii/motd-rasppleii.txt
+sudo install -m644 motd.txt /etc/motd

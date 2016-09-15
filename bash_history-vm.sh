@@ -20,6 +20,36 @@ sudo sed -i '0,/-eq 0/{ s/-eq 0/-ge 0/ }' /etc/profile
 source /etc/profile
 
 
+## Configure keyboard, timezone, and locale
+sudo rm /etc/default/keyboard
+sudo debconf-set-selections <<EOF
+keyboard-configuration keyboard-configuration/modelcode select pc104
+keyboard-configuration keyboard-configuration/xkb-keymap select us
+keyboard-configuration keyboard-configuration/layout select English (US)
+keyboard-configuration keyboard-configuration/variant select English (US)
+keyboard-configuration keyboard-configuration/model select Generic 104-key PC
+keyboard-configuration keyboard-configuration/layoutcode select us
+EOF
+sudo dpkg-reconfigure -f noninteractive keyboard-configuration
+sudo invoke-rc.d keyboard-setup start
+sudo setupcon
+
+sudo rm /etc/timezone
+sudo debconf-set-selections <<EOF
+tzdata tzdata/Areas select America
+tzdata tzdata/Zones/America select Los_Angeles
+EOF
+sudo dpkg-reconfigure -f noninteractive tzdata
+
+sudo rm /etc/default/locale /etc/locale.gen 2> /dev/null
+sudo debconf-set-selections <<EOF
+locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8, en_US ISO-8859-1
+locales locales/default_environment_locale select en_US.UTF-8
+EOF
+sudo dpkg-reconfigure -f noninteractive locales
+source /etc/default/locale
+
+
 ## Install A2SERVER
 cd /tmp
 wget -O setup ivanx.com/a2server/setup

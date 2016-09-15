@@ -41,10 +41,9 @@ exit 0@" /etc/rc.local
 	fi
 fi
 
-if [ $isRPi ]; then
-	## Configure keyboard, timezone, and locale
-	sudo rm /etc/default/keyboard
-	sudo debconf-set-selections <<EOF
+## Configure keyboard, timezone, and locale
+sudo rm /etc/default/keyboard
+sudo debconf-set-selections <<EOF
 keyboard-configuration keyboard-configuration/modelcode select pc104
 keyboard-configuration keyboard-configuration/xkb-keymap select us
 keyboard-configuration keyboard-configuration/layout select English (US)
@@ -52,25 +51,26 @@ keyboard-configuration keyboard-configuration/variant select English (US)
 keyboard-configuration keyboard-configuration/model select Generic 104-key PC
 keyboard-configuration keyboard-configuration/layoutcode select us
 EOF
-	sudo dpkg-reconfigure -f noninteractive keyboard-configuration
-	sudo invoke-rc.d keyboard-setup start
-	sudo setupcon
+sudo dpkg-reconfigure -f noninteractive keyboard-configuration
+sudo invoke-rc.d keyboard-setup start
+sudo setupcon
 
-	sudo rm /etc/timezone
-	sudo debconf-set-selections <<EOF
+sudo rm /etc/timezone
+sudo debconf-set-selections <<EOF
 tzdata tzdata/Areas select America
 tzdata tzdata/Zones/America select Los_Angeles
 EOF
-	sudo dpkg-reconfigure -f noninteractive tzdata
+sudo dpkg-reconfigure -f noninteractive tzdata
 
-	sudo rm /etc/default/locale /etc/locale.gen 2> /dev/null
-	sudo debconf-set-selections <<EOF
+sudo rm /etc/default/locale /etc/locale.gen 2> /dev/null
+sudo debconf-set-selections <<EOF
 locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8, en_US ISO-8859-1
 locales locales/default_environment_locale select en_US.UTF-8
 EOF
-	sudo dpkg-reconfigure -f noninteractive locales
-	source /etc/default/locale
+sudo dpkg-reconfigure -f noninteractive locales
+source /etc/default/locale
 
+if [ $isRPi ]; then
 	# disable running raspi-config at reboot if enabled
 	if [[ -e /etc/profile.d/raspi-config.sh ]]; then
 		sudo rm -f /etc/profile.d/raspi-config.sh
@@ -80,7 +80,7 @@ EOF
 fi
 
 ## Use default root path instead of user path for all users
-if [ $isDebian ];
+if [ $isDebian ]; then
 	# sed to English: Only in the range of line 0 to the first line containing
 	# pattern /-eq 0/, replace that pattern with "-ge 0".
 	sudo sed -i '0,/-eq 0/{ s/-eq 0/-ge 0/ }' /etc/profile

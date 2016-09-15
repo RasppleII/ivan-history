@@ -58,8 +58,8 @@ EOF
 
 	sudo rm /etc/timezone
 	sudo debconf-set-selections <<EOF
-tzdata tzdata/Zones/US select Eastern
-tzdata tzdata/Areas select US
+tzdata tzdata/Areas select America
+tzdata tzdata/Zones/America select Los_Angeles
 EOF
 	sudo dpkg-reconfigure -f noninteractive tzdata
 

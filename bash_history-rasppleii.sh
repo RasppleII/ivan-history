@@ -1,6 +1,14 @@
 #!/bin/bash
 # vim: set ft=sh tabstop=4 shiftwidth=4 noexpandtab :
 
+## Make sudo work without passwd for users in group sudo
+sudo tee /etc/sudoers.d/group-sudo-nopasswd >/dev/null <<EOF
+# Allow members of group sudo to execute any command without a password
+%sudo   ALL=(ALL:ALL) NOPASSWD: ALL
+EOF
+sudo chmod 440 /etc/sudoers.d/group-sudo-nopasswd
+
+
 ## Set system not to stat X11 by default
 sudo systemctl set-default multi-user.target
 

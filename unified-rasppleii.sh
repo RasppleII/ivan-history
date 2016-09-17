@@ -70,13 +70,11 @@ EOF
 sudo dpkg-reconfigure -f noninteractive locales
 source /etc/default/locale
 
-if [ $isRPi ]; then
-	# disable running raspi-config at reboot if enabled
-	if [[ -e /etc/profile.d/raspi-config.sh ]]; then
-		sudo rm -f /etc/profile.d/raspi-config.sh
-		sudo sed -i /etc/inittab -e "s/^#\(.*\)#\s*RPICFG_TO_ENABLE\s*/\1/" -e "/#\s*RPICFG_TO_DISABLE/d"
-		sudo telinit q
-	fi
+## disable running raspi-config at reboot if enabled
+if [[ -e /etc/profile.d/raspi-config.sh ]]; then
+	sudo rm -f /etc/profile.d/raspi-config.sh
+	sudo sed -i /etc/inittab -e "s/^#\(.*\)#\s*RPICFG_TO_ENABLE\s*/\1/" -e "/#\s*RPICFG_TO_DISABLE/d"
+	sudo telinit q
 fi
 
 ## Use default root path instead of user path for all users

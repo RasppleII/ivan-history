@@ -101,13 +101,7 @@ source setup -y -r
 ## Get version number and write out /etc/issue
 echo -n "Raspple II release number? "
 read RASPPLEII_VERSION
-if [ $isRPi ]; then
-	sudo wget -O /etc/issue ivanx.com/rasppleii/issue-rasppleii.txt
-	sudo sed -i "s/Raspple II release.*$/Raspple II release $RASPPLEII_VERSION/" /etc/issue
-elif [ $isDebian ]; then
-	sudo wget -O /etc/issue ivanx.com/rasppleii/issue-vm.txt
-	sudo sed -i "s/A2SERVER VM release.*$/A2SERVER VM release $RASPPLEII_VERSION/" /etc/issue
-fi
+printf -v RASPPLEII_ISSUE "Raspple II release %s\n%s" "$RASPPLEII_VERSION" "$(cat /etc/issue)"
 
 ## Install MOTD
 sudo install -m644 motd.txt /etc/motd

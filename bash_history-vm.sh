@@ -64,10 +64,9 @@ source setup -y -r
 
 
 ## Get version number and write out /etc/issue
-sudo wget -O /etc/issue ivanx.com/rasppleii/issue-vm.txt
-echo -n "A2SERVER VM release number? "
-read
-sudo sed -i "s/A2SERVER VM release.*$/A2SERVER VM release $REPLY/" /etc/issue
+echo -n "Raspple II release number? "
+read RASPPLEII_VERSION
+printf -v RASPPLEII_ISSUE "Raspple II release %s\n%s" "$RASPPLEII_VERSION" "$(cat /etc/issue)"
 
 
 ## Install MOTD

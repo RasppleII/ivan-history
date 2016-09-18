@@ -41,7 +41,8 @@ exit 0@" /etc/rc.local
 	fi
 fi
 
-## Configure keyboard, timezone, and locale
+#X# Configure keyboard, timezone, and locale
+#!# Applied with changes for Jessie
 sudo rm /etc/default/keyboard
 sudo debconf-set-selections <<EOF
 keyboard-configuration keyboard-configuration/modelcode select pc104
@@ -55,6 +56,7 @@ sudo dpkg-reconfigure -f noninteractive keyboard-configuration
 sudo invoke-rc.d keyboard-setup start
 sudo setupcon
 
+#X#
 sudo rm /etc/timezone
 sudo debconf-set-selections <<EOF
 tzdata tzdata/Areas select America
@@ -62,6 +64,7 @@ tzdata tzdata/Zones/America select Los_Angeles
 EOF
 sudo dpkg-reconfigure -f noninteractive tzdata
 
+#X#
 sudo rm /etc/default/locale /etc/locale.gen 2> /dev/null
 sudo debconf-set-selections <<EOF
 locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8, en_US ISO-8859-1
